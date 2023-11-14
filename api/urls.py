@@ -1,5 +1,5 @@
 from django.urls import path
-from api.todo import TaskListCreate, TaskDetail, TaskListView, TaskDetailView, TaskListCreateView
+from api.todo import TaskListCreate, TaskDetail, TaskListView, TaskDetailView
 
 urlpatterns = [
     # Rest
@@ -9,5 +9,4 @@ urlpatterns = [
     # Templates
     path('tasks/', TaskListView.as_view(), name='tasks-view'),
     path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail-view'),
-    path('create_task/', TaskListCreateView.as_view(), name='create_task'),
 ]

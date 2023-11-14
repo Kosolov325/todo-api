@@ -1,8 +1,7 @@
-from django.views.generic import ListView, CreateView, View
 from rest_framework import serializers, generics
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.views.generic import View
 from api.domain.task import Task
 from django import forms
 
@@ -24,6 +23,15 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'description', 'due_date', 'completed']
+        labels = {
+            'title': 'Título',
+            'description': 'Descrição',
+            'due_date': 'Data de Vencimento',
+            'completed': 'Concluído'
+        }
+        widgets = {
+            'due_date': forms.DateInput(attrs={'type': 'date'})
+        }
 
 class TaskDetailView(View):
     template_name = 'task_detail.html'
@@ -41,7 +49,7 @@ class TaskDetailView(View):
             return redirect('task-detail-view', pk=pk)
         return render(request, self.template_name, {'task': task, 'form': form})
     
-class TaskListView(ListView):
+class TaskListView(View):
     model = Task
     template_name = 'tasks.html'
 
@@ -49,11 +57,20 @@ class TaskListView(ListView):
         return Task.objects.all()
     
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = TaskForm()  
+        context = {}
+        context['form'] = TaskForm()
+        context['object_list'] = self.get_queryset()
         return context
 
-class TaskListCreateView(CreateView):
-    model = Task
-    form_class = TaskForm
-    success_url = reverse_lazy('tasks') 
+    def get(self, request):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            instance = form.save()
+            return redirect('task-detail-view', pk=instance.pk)
+        else:
+            context = self.get_context_data(form=form)
+            return render(request, self.template_name, context)
