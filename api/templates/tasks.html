@@ -15,21 +15,23 @@
         </form>
       </div>
 
-      {% for object in object_list %}
-      <div class="mini-task-container">
-        <p class="title">Tarefa</p>
+      <div class="tasks-group-container">
+        {% for object in object_list %}
+        <div class="mini-task-container">
+          <p class="title">Tarefa</p>
 
-        <div>
-          <p>Título: {{ object.title }}</p>
-          <p>Descrição: {{ object.description }}</p>
-          <p>Concluída: {{ object.completed }}</p>
+          <div>
+            <p>Título: {{ object.title }}</p>
+            <p>Descrição: {{ object.description }}</p>
+            <p>Concluída: {{ object.completed }}</p>
+          </div>
+
+          <a href="{% url 'task-detail-view' pk=object.pk %}">
+            <button class="buttons">Ver detalhes</button>
+          </a>
         </div>
-
-        <a href="{% url 'task-detail-view' pk=object.pk %}">
-          <button class="buttons">Ver detalhes</button>
-        </a>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
   </body>
 </html>
