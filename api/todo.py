@@ -44,6 +44,11 @@ class TaskDetailView(View):
     def post(self, request, pk):
         task = get_object_or_404(Task, pk=pk)
         form = TaskForm(request.POST, instance=task)
+        
+        if 'action' in request.POST and request.POST['action'] == 'delete':
+            task.delete()
+            return redirect('tasks-view')
+        
         if form.is_valid():
             form.save()
             return redirect('task-detail-view', pk=pk)
