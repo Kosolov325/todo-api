@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detalhes da Tarefa</title>
+</head>
+<body>
+    <a href="{% url 'tasks-view' %}">
+        <button>Voltar</button>
+    </a>
+    <h1>Detalhes da Tarefa</h1>
+    <p>Título: {{ task.title }}</p>
+    <p>Descrição: {{ task.description }}</p>
+    <p>Concluída: {{ task.completed }}</p>
+    <p>Data de Vencimento: {{ task.due_date }}</p>
+    <p>Atribuída em: {{ task.assigned_on }}</p>
+    <p>Última Atualização: {{ task.last_update }}</p>
+
+    <h2>Editar Tarefa</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar Alterações</button>
+    </form>
+</body>
+</html>

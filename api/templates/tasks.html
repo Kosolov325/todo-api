@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tasks</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Adicionar Tarefa</button>
+    </form>
+    
+    {% for object in object_list %}
+    <div>
+        <p>Título: {{ object.title }}</p>
+        <p>Descrição: {{ object.description }}</p>
+        <p>Concluída: {{ object.completed }}</p>
+        <a href="{% url 'task-detail-view' pk=object.pk %}">
+            <button>Ver</button>
+        </a>
+    </div>
+    {% endfor %}
+</body>
+</html>
