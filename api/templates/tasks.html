@@ -1,24 +1,35 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
-<head>
-    <title>Tasks</title>
-</head>
-<body>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Adicionar Tarefa</button>
-    </form>
-    
-    {% for object in object_list %}
-    <div>
-        <p>Título: {{ object.title }}</p>
-        <p>Descrição: {{ object.description }}</p>
-        <p>Concluída: {{ object.completed }}</p>
+  <head>
+    <title>To-Do List</title>
+    <link href="{% static 'styles/tasks.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="home-main-container">
+      <div class="new-task-container">
+        <h1 class="title">To-Do List</h1>
+        <form method="post">
+          {% csrf_token %} {{ form.as_p }}
+          <button type="submit" class="buttons">Adicionar Tarefa</button>
+        </form>
+      </div>
+
+      {% for object in object_list %}
+      <div class="mini-task-container">
+        <p class="title">Tarefa</p>
+
+        <div>
+          <p>Título: {{ object.title }}</p>
+          <p>Descrição: {{ object.description }}</p>
+          <p>Concluída: {{ object.completed }}</p>
+        </div>
+
         <a href="{% url 'task-detail-view' pk=object.pk %}">
-            <button>Ver</button>
+          <button class="buttons">Ver detalhes</button>
         </a>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-</body>
+  </body>
 </html>
