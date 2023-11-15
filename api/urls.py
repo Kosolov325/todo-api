@@ -8,5 +8,5 @@ urlpatterns = [
 
     # Templates
     path('tasks/', TaskListView.as_view(), name='tasks-view'),
-    path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail-view'),
+    path('tasks/<int:id>/', TaskDetailView.as_view(), name='task-detail-view'),
 ]

@@ -6,36 +6,85 @@
     <link href="{% static 'styles/tasks.css' %}" rel="stylesheet" />
   </head>
   <body>
+    <script>
+      const id = {{id}};
+      function submitForm() {
+        var form = document.getElementById("form");
+        var formData = new FormData(form);
+        fetch(`{{base_url}}/api/rest/tasks/${id}/`, {
+          method: 'PUT',
+          headers: {'X-CSRFToken': '{{csrf_token}}'},
+          mode: 'same-origin',
+          body: formData
+        })
+          .then(() => {
+            window.location.href = `/api/tasks/${id}`;
+          })
+          .catch(error => console.error('Error:', error));
+     }
+
+      function deleteTask() {
+        fetch(`{{base_url}}/api/rest/tasks/${id}/`, {
+          method: 'DELETE',
+          headers: {'X-CSRFToken': '{{csrf_token}}'},
+          mode: 'same-origin'
+        })
+          .then(() => {
+            window.location.href = '/api/tasks/';
+          })
+          .catch(error => console.error('Error:', error));
+      }
+      function fetchData() {
+        fetch(`{{base_url}}/api/rest/tasks/${id}/`)
+          .then(response => response.json())
+          .then(data => displayTask(data))
+          .catch(error => console.error('Error:', error));
+      }
+      function displayTask(task) {
+        var taskContainer = document.getElementById('details-container')
+        var inputTitle = document.getElementById('id_title')
+        var textAreaDescription = document.getElementById('id_description')
+        var inputDue_date = document.getElementById('id_due_date')
+        var inputCompleted = document.getElementById('id_completed')
+        var taskDiv = document.createElement('div');
+        
+        taskDiv.innerHTML = `
+            <p>Título: ${task.title}</p>
+            <p>Descrição: ${task.description}</p>
+            <p>Concluída: ${task.completed}</p>
+            <p>Data de Vencimento: ${task.due_date}</p>
+            <p>Atribuída em: ${task.assigned_on}</p>
+            <p>Última Atualização: ${task.last_update}</p>
+          `;
+        inputTitle.value = task.title
+        textAreaDescription.value = task.description
+        inputDue_date.value = task.due_date
+        if (task.completed){
+            inputCompleted.checked = true
+        }
+        
+        taskContainer.appendChild(taskDiv);
+      }
+      window.onload = fetchData;
+    </script>
     <div class="main-container">
       <navbar class="navbar">
-        <a href="{% url 'tasks-view' %}">
-          <button class="buttons">Voltar</button>
-        </a>
-        <form method="post">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="delete">
-          <button class="delete-button" type="submit">Deletar Tarefa</button>
-        </form>
+        <a href="{% url 'tasks-view' %}"><button class="buttons">Voltar</button></a>
+        <button class="delete-button" onClick="deleteTask()" type="button">Deletar Tarefa</button>
       </navbar>
 
-      <div class="details-container">
+      <div class="details-container" id='details-container'>
         <h1 class="title">Detalhes da Tarefa</h1>
-
-        <div>
-          <p>Título: {{ task.title }}</p>
-          <p>Descrição: {{ task.description }}</p>
-          <p>Concluída: {{ task.completed }}</p>
-          <p>Data de Vencimento: {{ task.due_date }}</p>
-          <p>Atribuída em: {{ task.assigned_on }}</p>
-          <p>Última Atualização: {{ task.last_update }}</p>
-        </div>
       </div>
 
       <div class="edit-tasks-container">
         <h2 class="title">Editar Tarefa</h2>
-        <form method="post">
-          {% csrf_token %} {{ form.as_p }}
-          <button class="buttons" type="submit">Salvar Alterações</button>
+        <form id='form'>
+          <p><label for="id_title">Título:</label><input type="text" name="title" maxlength="100" required="" id="id_title"></p> 
+          <p><label for="id_description">Descrição:</label><textarea name="description" cols="40" rows="10" required="" id="id_description"></textarea></p>
+          <p><label for="id_due_date">Data de Vencimento:</label><input type="date" name="due_date" required="" id="id_due_date"></p>
+          <p><label for="id_completed">Concluído:</label><input type="checkbox" name="completed" id="id_completed"></p>
+          <button type='button' class="buttons" onClick="submitForm()">Salvar Alterações</button>
         </form>
       </div>
     </div>
