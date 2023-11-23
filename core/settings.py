@@ -117,7 +117,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100
 }
 
-CACHES = settings.get('CACHES')
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

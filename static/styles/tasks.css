@@ -26,11 +26,13 @@ body{
 }
 
 .main-container{
-  width: 90%;
+  width: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  position: relative;
 }
 
 .home-main-container{
@@ -45,8 +47,8 @@ body{
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: space-around;
 }
 
 .mini-task-container{
@@ -68,7 +70,6 @@ body{
   display: grid;
   align-items: center;
   justify-content: space-around;
-  margin-top: 10rem;
 }
 
 .tasks-group-container{
@@ -80,8 +81,10 @@ body{
 
 .navbar{
   display: flex;
+  position: absolute;
+  top: 0;
   justify-content: space-between;
-  width: 100%;
+  width: 85%;
 }
 
 .buttons {
@@ -147,3 +150,38 @@ input {
   border: none;
   font-family: 'Poppins', sans-serif;
 }
+
+input, textarea{
+  padding: 0.5rem;
+}
+
+.form-container{
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.form-container-completed{
+  display: flex;
+  align-items: center;
+  
+}
+
+.form-button-div{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.content-container{
+  width: 60%;
+  display: flex;
+  align-items: flex-start;
+  gap: 15rem;
+}
+
+
+
+

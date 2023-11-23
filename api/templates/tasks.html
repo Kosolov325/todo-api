@@ -6,13 +6,16 @@
     <link href="{% static 'styles/tasks.css' %}" rel="stylesheet" />
     <script>
       function submitForm() {
-        var form = document.getElementById("form");
-        var formData = new FormData(form);
+        var data = {
+          "title":document.getElementById("id_title").value,
+          "description":document.getElementById("id_description").value,
+          "due_date":document.getElementById("id_due_date").value,
+          "completed":document.getElementById("id_completed").value 
+        };
         fetch(`{{base_url}}/api/rest/tasks/`, {
           method: 'POST',
-          headers: {'X-CSRFToken': '{{csrf_token}}'},
-          mode: 'same-origin',
-          body: formData
+          headers: { "Content-Type": "application/json"},
+          body: JSON.stringify(data)
         })
           .then(response => (response.json()))
           .then(data => {
@@ -20,7 +23,6 @@
           })
           .catch(error => console.error('Error:', error));
       }
-
 
       function fetchData() {
         fetch(`{{base_url}}/api/rest/tasks/`)
@@ -35,7 +37,6 @@
         apiData.results.forEach(task => {
           var taskDiv = document.createElement('div');
           taskDiv.classList.add('mini-task-container');
-          console.log(task.completed)
           taskDiv.innerHTML = `
             <p class="title">Tarefa</p>
             <div>
@@ -59,12 +60,17 @@
       <div class="new-task-container">
         <h1 class="title">To-Do List</h1>
         <form id='form'>
-          <p><label for="id_title">Título:</label><input type="text" name="title" maxlength="100" required="" id="id_title">
-          </p>
-          <p><label for="id_description">Descrição:</label><textarea name="description" cols="40" rows="10" required="" id="id_description"></textarea></p>
-          <p><label for="id_due_date">Data de Vencimento:</label><input type="date" name="due_date" required="" id="id_due_date">
-          </p>
-          <button type="button" onclick="submitForm()" class="buttons">Adicionar Tarefa</button>
+          <div class="form-container">
+            <label for="id_title">Título:</label><input type="text" name="title" maxlength="100" required="" id="id_title">
+            <label for="id_description">Descrição:</label><textarea name="description" cols="40" rows="10" required="" id="id_description"></textarea>
+            <label for="id_due_date">Data de Vencimento:</label><input type="date" name="due_date" required="" id="id_due_date">
+            <div class="form-container-completed">
+              <label for="id_completed">Concluído:</label><input type="checkbox" name="completed" id="id_completed">
+            </div>
+          </div>
+          <div class="form-button-div">
+            <button type='button' class="buttons" onClick="submitForm()">Criar tarefa</button>
+          </div>
         </form>
       </div>
       <div class="tasks-group-container" id='tasks-group-container'></div>

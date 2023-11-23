@@ -9,7 +9,7 @@ from api.domain.task import Task
 from django.conf import settings
 
 class TaskSerializer(serializers.ModelSerializer):
-    links = serializers.SerializerMethodField()
+    links = serializers.SerializerMethodField(read_only=True)
 
     def get_links(self, obj):
         request = self.context.get('request')
@@ -22,18 +22,6 @@ class TaskSerializer(serializers.ModelSerializer):
             # Adicione outros links conforme necessário
         ]
         return links
-    
-    def get_previous_page(self, obj):
-        if 'paginator' in self.context:
-            page = self.context['paginator'].previous_page_number()
-            return reverse('task-list', request=self.context['request'], args=[page])
-        return None
-
-    def get_next_page(self, obj):
-        if 'paginator' in self.context:
-            page = self.context['paginator'].next_page_number()
-            return reverse('task-list', request=self.context['request'], args=[page])
-        return None
     
     class Meta:
         model = Task
@@ -49,8 +37,7 @@ class TaskListCreate(generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
-@method_decorator(cache_page(60 * 5), name='dispatch') 
-class TaskDetail(CacheResponseMixin, generics.RetrieveUpdateDestroyAPIView):
+class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskDetailSerializer
 
